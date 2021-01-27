@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # Author: Erik Anderson
 # Email: erik.francis.anderson@gmail.com
-# Date: 03/03/2020
+# Date: 01/26/2021
 """Docstring for module __init__.py"""
 
 # Imports - standard library
@@ -18,82 +18,49 @@ from toolbox.utils import *
 from jinja2 import StrictUndefined, Environment, FileSystemLoader
 
 # Imports - local source
-from cadence_tool import CadenceTool
 from jinja_tool import JinjaTool
 
 
-class LiberateTool(CadenceTool, JinjaTool):
-    """Genus toolbox tool"""
+class XilinxImplementTool(JinjaTool):
+    """Xilinx synthesis and implementation tool"""
     def __init__(self, db: Database, log: Callable[[str, LogLevel], None]):
-        super(LiberateTool, self).__init__(db, log)
-        self.bin = BinaryDriver(
-            self.get_db(self.get_namespace("LiberateTool") + ".bin"))
-        self.lib = self.get_db(self.get_namespace("LiberateTool"))
+        super(XilinxImplementTool, self).__init__(db, log)
+        self.bin = BinaryDriver("vivado")
+        self.xilinx = self.get_db(self.get_namespace("XilinxImplementTool"))
+        self.template_file = "templates/implement_template.tcl"
+        self.render_file = os.path.join(self.get_db("internal.job_dir"),
+                                        "implement.tcl")
 
     def steps(self) -> List[Callable[[], None]]:
         """Returns a list of functions to run for each step"""
-        return [self.render_libgen, self.run_liberate]
+        return [self.render_tcl, self.run_vivado]
 
-    @property
-    def libgen_template(self):
-        return self.get_db(
-            self.get_namespace("LiberateTool") + ".libgen_template")
+    def render_tcl(self):
+        """Renders tcl file that vivado will run in batch mode"""
+        # Get render vars
+        project_dir = os.path.join(self.get_db("internal.job_dir"), "project")
+        # Render file
+        self.render_to_file(self.template_file,
+                            self.render_file,
+                            ts=self.ts,
+                            project_dir=project_dir)
 
-    @property
-    def libgen(self):
-        return os.path.join(self.get_db("internal.job_dir"), "libgen.tcl")
-
-    def get_input_slew(self):
-        """Translates units into the liberate default 1ns"""
-        base_unit = 1e-9
-        units = {"1ns": 1e-9, "100ps": 1e-10, "10ps": 1e-11, "1ps": 1e-12}
-        pre_scaler = units[self.lib["time_unit"]]
-        input_slew = self.lib["input_slew"]
-        return [round(s * pre_scaler / base_unit, 10) for s in input_slew]
-
-    def get_output_load(self):
-        """Translates units into the liberate default 1pF"""
-        base_unit = 1e-12
-        units = {"1pf": 1e-12, "100ff": 1e-13, "10ff": 1e-14, "1ff": 1e-15}
-        pre_scaler = units[self.lib["cap_unit"]]
-        output_load = self.lib["output_load"]
-        return [round(o * pre_scaler / base_unit, 10) for o in output_load]
-
-    def render_libgen(self):
-        """Renders abstract replay and option files"""
-        # Unit translation
-        input_slew = self.get_input_slew()
-        output_load = self.get_output_load()
-        # Lib name
-        cell = self.lib["cell"]
-        volt = self.lib["voltage"]
-        temp = self.lib["temperature"]
-        lib_name = f"{cell}_v{volt}_t{temp}"
-        if self.lib["lib_name"]:
-            lib_name = self.lib["lib_name"]
-        # Get pinlist
-        pin_list = []
-        for k, v in self.lib["cell_pins"].items():
-            pin_list += v
-        self.render_to_file(self.libgen_template,
-                            self.libgen,
-                            lib_name=lib_name,
-                            input_slew=input_slew,
-                            pin_list=pin_list,
-                            output_load=output_load,
-                            ts=self.ts)
-
-    def run_liberate(self):
-        if self.get_db(self.get_namespace("LiberateTool") + ".execute"):
+    def run_vivado(self):
+        """Actually runs the vivado command"""
+        if self.xilinx["execute"]:
+            self.log('Assumes "vivado" binary added to path')
             # Add options
-            self.bin.add_option(self.libgen)
+            render_file_local = Path(self.render_file).relative_to(
+                self.get_db('internal.job_dir'))
+            self.bin.add_option("-mode", "batch")
+            self.bin.add_option("-source", render_file_local)
             # Execute binary
             self.log(self.bin.get_execute_string())
             self.bin.execute(directory=self.get_db('internal.job_dir'))
             self.log(
-                f"Final liberate results in => {Path(self.get_db('internal.job_dir')).relative_to(self.get_db('internal.work_dir'))}"
+                f"Final implementation in => {Path(self.get_db('internal.job_dir')).relative_to(self.get_db('internal.work_dir'))}"
             )
         else:
             self.log(
-                "Liberate execute flag set to false. Lib generation not performed."
+                "Xilinx implement execute flag set to false. Design not implemented."
             )

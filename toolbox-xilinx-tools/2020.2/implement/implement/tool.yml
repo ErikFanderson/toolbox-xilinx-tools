@@ -1,105 +1,40 @@
-# Need to translate units to these internal units for defining templates
-# current => 1mA
-# power => 1nW
-# resistance => 1kOhm
-# time => ns 
-# voltage => 1V
-# capacitance => pf 
-
 # Name must match the class name in __init__.py
-tool: LiberateTool 
-namespace: liberate 
+tool: XilinxImplementTool
+namespace: vivado 
 
-# Dictionary containg all properties/attributes required by the tool
+# Dictionary containing all properties/attributes required by the tool
 properties:
-  #--------------------------------------------------------
-  # TOOL SETUP 
-  #--------------------------------------------------------
-  bin:
-    description: "Path to liberate binary"
-    default: null
-    schema: "str()"
   execute:
-    description: "Determines whether or not liberate is run"
+    description: "Determines whether or not vivado is actually run (otherwise template rendered and that's it)"
     default: true
     schema: "bool()"
-  libgen_template:
-    description: "TCL template for lib generation"
-    default: "libgen.tcl"
-    schema: "str()"
-  #--------------------------------------------------------
-  # Core fields 
-  #--------------------------------------------------------
-  power_nets:
-    description: "List of supplies and their values"
-    default: []
-    schema: "list(include('pg_net'))"
-  ground_nets:
-    description: "List of gnds and their values"
-    default: []  
-    schema: "list(include('pg_net'))"
-  voltage:
-    description: "Characterization voltage"
-    default: null
-    schema: "num()"
-  temperature:
-    description: "Characterization temperature"
-    default: null
-    schema: "num()"
-  spice_files:
-    description: "List of spice models and device netlists"
+  part:
+    description: "The FPGA part number that the software should target"
     default: null 
-    schema: "list(file())"
-  netlist_format:
-    description: "List of models and device netlists"
-    default: "spice" 
-    schema: "enum('spice', 'spectre')"
-  lib_name:
-    description: "Name of lib file"
-    default: null 
-    schema: "str(required=False)"
-  input_slew:
-    description: "List of input slews to use for characterization. Must be increasing list"
-    default: null
-    schema: "list(num())"
-  output_load:
-    description: "List of output loads to use for characterization. Must be increasing list"
-    default: null
-    schema: "list(num())"
-  time_unit:
-    description: "Units of input_slew field"
-    default: "1ns" 
-    schema: "enum('1ns', '100ps', '10ps', '1ps')"
-  cap_unit:
-    description: "Units of output_load field"
-    default: "1pf" 
-    schema: "enum('1pf', '100ff', '10ff', '1ff')"
-  #--------------------------------------------------------
-  # Cell information
-  #--------------------------------------------------------
-  cell:
-    description: "Name of cell that should be characterized"
-    default: null
     schema: "str()"
-  cell_pins:
-    description: "Map of input, output, bidi, and async pins"
-    default: null
-    schema: "include('cell_pins_map')"
-  arcs:
-    description: "User defined timing arcs (normally should allow arcs to be auto-generated)"
+  verilog:
+    description: "List of verilog files to be included (read in the order given)"
     default: [] 
-    schema: "list(include('arc'))"
-schema_includes:
-  pg_net:
-    name: "str()"
-    value: "num()"
-  arc:
-    pin: "str()"
-    pin_dir: "enum('R', 'F')"
-    related_pin: "str()"
-    related_pin_dir: "enum('R', 'F')"
-  cell_pins_map:
-    async: "list(str(), required=False)"
-    bidi: "list(str(), required=False)"
-    input: "list(str())"
-    output: "list(str())"
+    schema: "list(file())"
+  vhdl:
+    description: "List of vhdl files to be included (read in the order given)"
+    default: [] 
+    schema: "list(file())"
+  xdc:
+    description: "List of xdc files to be included (read in the order given)"
+    default: [] 
+    schema: "list(file())"
+#schema_includes:
+#  pg_net:
+#    name: "str()"
+#    value: "num()"
+#  arc:
+#    pin: "str()"
+#    pin_dir: "enum('R', 'F')"
+#    related_pin: "str()"
+#    related_pin_dir: "enum('R', 'F')"
+#  cell_pins_map:
+#    async: "list(str(), required=False)"
+#    bidi: "list(str(), required=False)"
+#    input: "list(str())"
+#    output: "list(str())"
