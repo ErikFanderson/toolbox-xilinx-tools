@@ -24,17 +24,43 @@ properties:
     description: "List of xdc files to be included (read in the order given)"
     default: [] 
     schema: "list(file())"
-#schema_includes:
-#  pg_net:
-#    name: "str()"
-#    value: "num()"
-#  arc:
-#    pin: "str()"
-#    pin_dir: "enum('R', 'F')"
-#    related_pin: "str()"
-#    related_pin_dir: "enum('R', 'F')"
-#  cell_pins_map:
-#    async: "list(str(), required=False)"
-#    bidi: "list(str(), required=False)"
-#    input: "list(str())"
-#    output: "list(str())"
+  ports:
+    description: "List of port objects"
+    default: [] 
+    schema: "list(include('port'))"
+  clocks:
+    description: "List of clocks for generating clock timing constraints"
+    default: [] 
+    schema: "list(include('clock'))"
+  config:
+    description: "Configuration settings for FPGA"
+    default: {mode: "B_SCAN", bank_voltage_select: "GND", voltage: 1.8}
+    schema: "include('cfg')"
+  units:
+    description: "Define units for all variables"
+    default: {time: "ns", capacitance: "pF", current: "mA", voltage: "V", power: "mW", resistance: "ohm", altitude: "meters"}
+    schema: "include('units')"
+schema_includes:
+  port:
+    name: "str()"
+    iostandard: "enum('LVCMOS18', 'LVDS')"
+    package_pin: "str()"
+    clock: "bool(required=False)"
+    buffer_type: "str(required=False)"
+    #drive: "str()"
+    #slew: "str()"
+  cfg:
+    mode: "str()"
+    bank_voltage_select: "enum('VCCO', 'GND')"
+    voltage: "num(min=0.0)"
+  clock:
+    name: "str()"
+    period: "num(min=0.0)"
+  units:
+    time: "enum('us', 'ns', 'ps')"
+    capacitance: "str()"
+    current: "str()"
+    voltage: "str()"
+    power: "str()"
+    resistance: "str()"
+    altitude: "str()"
