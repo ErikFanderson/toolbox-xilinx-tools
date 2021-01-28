@@ -1,0 +1,26 @@
+# Name must match the class name in __init__.py
+tool: XilinxUploadTool
+namespace: upload 
+
+# Dictionary containing all properties/attributes required by the tool
+properties:
+  execute:
+    description: "Determines whether or not vivado is actually run (otherwise template rendered and that's it)"
+    default: true
+    schema: "bool()"
+  bitstream:
+    description: "Path to the bitstream file that will be uploaded to the FPGA"
+    default: null
+    schema: "file()"
+  hw_server:
+    description: "Hostname and port number for the hardware server that manages hardware targets"
+    default: {hostname: "localhost", port:3121} 
+    schema: "include('hw_server')"
+  query_targets:
+    description: "Will optionally query targets instead of uploading"
+    default: false 
+    schema: "bool()"
+schema_includes:
+  hw_server:
+    hostname: "str()"
+    port: "int()"

@@ -21,49 +21,27 @@ from jinja2 import StrictUndefined, Environment, FileSystemLoader
 from jinja_tool import JinjaTool
 
 
-class XilinxImplementTool(JinjaTool):
+class XilinxUploadTool(JinjaTool):
     """Xilinx synthesis and implementation tool"""
     def __init__(self, db: Database, log: Callable[[str, LogLevel], None]):
-        super(XilinxImplementTool, self).__init__(db, log)
+        super(XilinxUploadTool, self).__init__(db, log)
         self.bin = BinaryDriver("vivado")
-        self.viv = self.get_db(self.get_namespace("XilinxImplementTool"))
-        self.template_file = "templates/implement.tcl"
+        self.upload = self.get_db(self.get_namespace("XilinxUploadTool"))
+        self.template_file = "upload.tcl"
         self.render_file = os.path.join(self.get_db("internal.job_dir"),
-                                        "implement.tcl")
+                                        "upload.tcl")
 
     def steps(self) -> List[Callable[[], None]]:
         """Returns a list of functions to run for each step"""
-        return [self.render_tcl, self.render_timing_xdc, self.run_vivado]
+        return [self.render_tcl, self.run_vivado]
 
     def render_tcl(self):
         """Renders tcl file that vivado will run in batch mode"""
         self.render_to_file(self.template_file, self.render_file, ts=self.ts)
 
-    def render_timing_xdc(self):
-        """Renders timing xdc file for constraining timing pre-synthesis"""
-        # TODO create similar methods for all xdc types: timing, io, misc, waver, and physical
-        # Path setup
-        template_file = "timing.xdc"
-        render_file = os.path.join(self.get_db("internal.job_dir"),
-                                   "timing.xdc")
-        # Adjust clock units
-        time_multiplier = {"us": 1e3, "ns": 1, "ps": 1e-3}
-        for i, clk in enumerate(self.viv["clocks"]):
-            clk["period"] = time_multiplier[self.viv["units"]
-                                            ["time"]] * clk["period"]
-            if self.viv["units"]["time"] != "ns":
-                self.log(
-                    f'Clock "{clk["name"]}" period translated to Vivado time units: {clk["period"]} [ns]',
-                    LogLevel.WARNING)
-        # Render file
-        self.render_to_file(template_file,
-                            render_file,
-                            clocks=self.viv["clocks"],
-                            ts=self.ts)
-
     def run_vivado(self):
         """Actually runs the vivado command"""
-        if self.viv["execute"]:
+        if self.upload["execute"]:
             self.log('Assumes "vivado" binary added to path')
             # Add options
             render_file_local = Path(self.render_file).relative_to(
@@ -78,5 +56,5 @@ class XilinxImplementTool(JinjaTool):
             )
         else:
             self.log(
-                "Xilinx implement execute flag set to false. Design not implemented."
+                "Xilinx upload execute flag set to false. Design not uploaded."
             )
