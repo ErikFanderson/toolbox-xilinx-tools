@@ -51,9 +51,6 @@ class XilinxUploadTool(JinjaTool):
             # Execute binary
             self.log(self.bin.get_execute_string())
             self.bin.execute(directory=self.get_db('internal.job_dir'))
-            self.log(
-                f"Final implementation in => {Path(self.get_db('internal.job_dir')).relative_to(self.get_db('internal.work_dir'))}"
-            )
         else:
             self.log(
                 "Xilinx upload execute flag set to false. Design not uploaded."

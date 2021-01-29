@@ -12,8 +12,9 @@ set_property PARAM.FREQUENCY 15000000 [get_hw_targets {{ts.upload.target}}]
 open_hw_target
 
 # Associate bitsream with hardware
-set_property PROGRAM.FILE { {{ts.upload.bitstream}} } [lindex [get_hw_devices] 0]
+set_property PROGRAM.FILE { {{ts.upload.bitstream|realpath}} } [lindex [get_hw_devices] 0]
 
 # Program hardware 
 program_hw_devices [lindex [get_hw_devices] 0]
+refresh_hw_device [lindex [get_hw_devices] 0]
 {% endif %}
