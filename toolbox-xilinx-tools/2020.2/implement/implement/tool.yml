@@ -56,6 +56,7 @@ schema_includes:
   clock:
     name: "str()"
     period: "num(min=0.0)"
+    type: "enum('port', 'pin', 'net')"
   units:
     time: "enum('us', 'ns', 'ps')"
     capacitance: "str()"

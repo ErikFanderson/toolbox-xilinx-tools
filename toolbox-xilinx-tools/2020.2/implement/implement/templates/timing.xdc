@@ -14,6 +14,12 @@ set_units -verbose \
 # Clock constraints 
 #------------------------------------------------------------------------------
 {% for clk in clocks %}
+{% if clk.type == "port" %}
 create_clock -verbose -period {{clk.period}} [get_ports {{clk.name}}]
+{% elif clk.type == "pin" %}
+create_clock -verbose -period {{clk.period}} [get_pins {{clk.name}}]
+{% else %}
+create_clock -verbose -period {{clk.period}} [get_nets {{clk.name}}]
+{% endif %}
 {% endfor %}
 #------------------------------------------------------------------------------
