@@ -14,7 +14,7 @@ properties:
     schema: "file()"
   hw_server:
     description: "Hostname and port number for the hardware server that manages hardware targets"
-    default: {hostname: "localhost", port:3121} 
+    default: {hostname: "localhost", port: 3121} 
     schema: "include('hw_server')"
   query_targets:
     description: "Will optionally query targets instead of uploading"
