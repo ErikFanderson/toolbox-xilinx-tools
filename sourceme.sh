@@ -11,10 +11,10 @@ fi
 # Set MYPYPATH accordingly
 if [ -z "$MYPYPATH" ]
 then
-    export MYPYPATH=$PWD/toolbox-xilinx-tools
+    export MYPYPATH=$PWD/toolbox_xilinx_tools
 else
-    export MYPYPATH=$PWD/toolbox-xilinx-tools:$MYPYPATH
+    export MYPYPATH=$PWD/toolbox_xilinx_tools:$MYPYPATH
 fi
 
 # Set TOOLBOX-XILINX-TOOLS_HOME variable
-export TOOLBOX-XILINX-TOOLS_HOME=$PWD
+export TOOLBOX_XILINX_TOOLS_HOME=$PWD

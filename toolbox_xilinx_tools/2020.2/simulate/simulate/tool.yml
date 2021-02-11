@@ -1,0 +1,47 @@
+# Name must match the class name in __init__.py
+tool: XsimTool 
+namespace: simulate 
+
+# Dictionary containing all properties/attributes required by the tool
+properties:
+  bin:
+    description: "Path to xsim binary."
+    default: "xsim" 
+    schema: "str()"
+  include_dirs:
+    description: "List of directories to search for include files"
+    default: [] 
+    schema: "list(dir())"
+  defines:
+    description: "List of defines files"
+    default: [] 
+    schema: "list(file())"
+  packages:
+    description: "List of package files"
+    default: [] 
+    schema: "list(file())"
+  rtl:
+    description: "List of rtl files"
+    default: [] 
+    schema: "list(file())"
+  test:
+    description: "List of testbench files"
+    default: [] 
+    schema: "list(file())"
+  top_tcl_template:
+    description: "Jinja2 Tcl template used for input to xcelium."
+    default: null 
+    schema: "file(required=False)"
+  testbench:
+    description: "Testbench to be run by simulation tool."
+    default: null
+    schema: "str()"
+  options:
+    description: "Command line options passed directly to executable. Strings are passed raw to binary."
+    default: []
+    schema: "list(str())"
+  # TODO Add sdf support (multiple files and specify which module to annotate)
+  #sdf:
+  #  description: "Standard Delay Format (SDF) file for delay annotations."
+  #  default: null
+  #  schema: "file(required=False)"

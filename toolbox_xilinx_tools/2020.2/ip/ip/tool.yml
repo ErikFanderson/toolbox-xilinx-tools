@@ -1,0 +1,29 @@
+# Name must match the class name in __init__.py
+tool: IPTool 
+namespace: ip 
+
+# Dictionary containing all properties/attributes required by the tool
+properties:
+  bin:
+    description: "Path to binary command used to invoke vivado"
+    default: "vivado"
+    schema: "str()"
+  execute:
+    description: "Determines whether tool runs vivado or not"
+    default: true 
+    schema: "bool()"
+  part:
+    description: "Target part for IP"
+    default: null 
+    schema: "str()"
+  blocks:
+    description: "List of ip blocks to generate"
+    default: []
+    schema: "map(include('block'))"
+schema_includes:
+  block:
+    vlnv: "str()"
+    properties: "list(include('property'))"
+  property:
+    name: "str()"
+    value: "any(num(), int(), str())"
