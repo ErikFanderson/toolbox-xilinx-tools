@@ -2,12 +2,12 @@
 # Set Units (redefine units in every XDC because paranoia)
 #------------------------------------------------------------------------------
 set_units -verbose \
-    -capacitance {{ts.vivado.units.capacitance}} \
-    -current {{ts.vivado.units.current}} \
-    -voltage {{ts.vivado.units.voltage}} \
-    -power {{ts.vivado.units.power}} \
-    -resistance {{ts.vivado.units.resistance}} \
-    -altitude {{ts.vivado.units.altitude}}
+    -capacitance {{ts.implement.units.capacitance}} \
+    -current {{ts.implement.units.current}} \
+    -voltage {{ts.implement.units.voltage}} \
+    -power {{ts.implement.units.power}} \
+    -resistance {{ts.implement.units.resistance}} \
+    -altitude {{ts.implement.units.altitude}}
 #------------------------------------------------------------------------------
 
 #------------------------------------------------------------------------------

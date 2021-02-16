@@ -1,9 +1,13 @@
 # Name must match the class name in __init__.py
 tool: XilinxImplementTool
-namespace: vivado 
+namespace: implement 
 
 # Dictionary containing all properties/attributes required by the tool
 properties:
+  verilog_version:
+    description: "Determines whether or not vivado is actually run (otherwise template rendered and that's it)"
+    default: "sv"
+    schema: "enum('default', 'sv')"
   execute:
     description: "Determines whether or not vivado is actually run (otherwise template rendered and that's it)"
     default: true
