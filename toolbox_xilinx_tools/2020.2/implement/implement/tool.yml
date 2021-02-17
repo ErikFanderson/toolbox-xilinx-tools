@@ -32,10 +32,22 @@ properties:
     description: "List of port objects"
     default: [] 
     schema: "list(include('port'))"
-  clocks:
+  primary_clocks:
     description: "List of clocks for generating clock timing constraints"
     default: [] 
-    schema: "list(include('clock'))"
+    schema: "list(include('primary_clock'))"
+  generated_clocks:
+    description: "List of clocks for generating clock timing constraints"
+    default: [] 
+    schema: "list(include('generated_clock'))"
+  input_delay_constraints:
+    description: "List of input delay constraints"
+    default: [] 
+    schema: "list(include('input_delay_constraint'))"
+  output_delay_constraints:
+    description: "List of output delay constraints"
+    default: [] 
+    schema: "list(include('output_delay_constraint'))"
   config:
     description: "Configuration settings for FPGA"
     default: {mode: "B_SCAN", bank_voltage_select: "GND", voltage: 1.8}
@@ -45,6 +57,18 @@ properties:
     default: {time: "ns", capacitance: "pF", current: "mA", voltage: "V", power: "mW", resistance: "ohm", altitude: "meters"}
     schema: "include('units')"
 schema_includes:
+  input_delay_constraint:
+    clock: "str()"
+    clock_edge: "enum('rise', 'fall')"
+    port: "str()"
+    min_delay: "num(min= 0.0)"
+    max_delay: "num(min= 0.0)"
+  output_delay_constraint:
+    clock: "str()"
+    clock_edge: "enum('rise', 'fall')"
+    port: "str()"
+    min_delay: "num(min= 0.0)"
+    max_delay: "num(min= 0.0)"
   port:
     name: "str()"
     iostandard: "enum('LVCMOS18', 'LVDS')"
@@ -57,10 +81,21 @@ schema_includes:
     mode: "str()"
     bank_voltage_select: "enum('VCCO', 'GND')"
     voltage: "num(min=0.0)"
-  clock:
+  primary_clock:
     name: "str()"
+    object: "str()"
     period: "num(min=0.0)"
-    type: "enum('port', 'pin', 'net')"
+    waveform: "list(num(min=0.0), required=False)"
+  generated_clock:
+    name: "str()"
+    object: "str()"
+    type: "enum('port', 'pin', 'net', 'none')"
+    source: "str()"
+    source_type: "enum('port', 'pin', 'net', 'none')"
+    edges: "list(int(min=1), required=False)"
+    edge_shift: "list(num(min=0.0), required=False)"
+    multiplier: "int(min=1, required=False)"
+    divisor: "int(min=1, required=False)"
   units:
     time: "enum('us', 'ns', 'ps')"
     capacitance: "str()"

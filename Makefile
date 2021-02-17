@@ -3,17 +3,17 @@
 
 default: test
 
-# Lints toolbox-xilinx-tools directory recursively
+# Lints toolbox_xilinx_tools directory recursively
 lint:
-	pylint toolbox-xilinx-tools tests
+	pylint toolbox_xilinx_tools tests
 
-# Formats toolbox-xilinx-tools directory recursively
+# Formats toolbox_xilinx_tools directory recursively
 format:
-	yapf -i -r toolbox-xilinx-tools tests
+	yapf -i -r toolbox_xilinx_tools tests
 
-# Type checks toolbox-xilinx-tools directory recursively
+# Type checks toolbox_xilinx_tools directory recursively
 type:
-	mypy toolbox-xilinx-tools tests
+	mypy toolbox_xilinx_tools tests
 
 # Runs all tests in tests directory 
 test:

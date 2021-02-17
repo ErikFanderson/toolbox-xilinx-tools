@@ -28,7 +28,8 @@ class IPTool(Tool):
         # Create binary driver
         self.ip = self.get_db(self.get_namespace("IPTool"))
         self.bin = BinaryDriver(self.ip["bin"])
-        self.ip_file = File(os.path.join(self.get_db("internal.job_dir"), "ip.tcl"), "#")
+        self.ip_file = File(
+            os.path.join(self.get_db("internal.job_dir"), "ip.tcl"), "#")
 
     def steps(self) -> List[Callable[[], None]]:
         return [self.render_ip_tcl, self.run_vivado]
@@ -36,12 +37,14 @@ class IPTool(Tool):
     def render_ip_tcl(self):
         """Generates tcl that will be passed to vivado"""
         self.ip_file.add_line(f"set_part {self.ip['part']}")
-        for name, block  in self.ip["blocks"].items():
+        for name, block in self.ip["blocks"].items():
             sec = Section(f"{name}: {block['vlnv']}", "#")
             self.ip_file.add(sec)
-            sec.add_line(f"create_ip -vlnv {block['vlnv']} -module_name {name}")
+            sec.add_line(
+                f"create_ip -vlnv {block['vlnv']} -module_name {name}")
             for prop in block["properties"]:
-                sec.add_line(f"set_property CONFIG.{prop['name']} {prop['value']}")
+                sec.add_line(
+                    f"set_property CONFIG.{prop['name']} {prop['value']}")
             sec.add_line(f"generate_target all [get_ips {name}]")
             sec.add_line(f"synth_ip [get_ips {name}]")
             #sec.add_line(f"lsearch -all -inline [list_property [get_ips {name}]] CONFIG.*")
@@ -49,7 +52,8 @@ class IPTool(Tool):
         if self.ip_file.generate():
             self.log(f"File generated: {self.ip_file.fpath}")
         else:
-            self.log(f"File not generated: {self.ip_file.fpath}", LogLevel.WARNING)
+            self.log(f"File not generated: {self.ip_file.fpath}",
+                     LogLevel.WARNING)
 
     def run_vivado(self):
         """Actually runs the vivado command"""
@@ -65,5 +69,4 @@ class IPTool(Tool):
             )
         else:
             self.log(
-                "IP generation execute flag set to false. IP not generated."
-            )
+                "IP generation execute flag set to false. IP not generated.")

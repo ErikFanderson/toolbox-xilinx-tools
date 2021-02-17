@@ -27,12 +27,13 @@ file mkdir reports
 #------------------------------------------------------------------------------
 # Synthesis (sets top and opens design)
 #------------------------------------------------------------------------------
-synth_design -top {{ts.implement.top}} -part {{ts.implement.part}}
+synth_design -top {{ts.implement.top}} -flatten_hierarchy none -part {{ts.implement.part}}
 write_checkpoint -force -verbose checkpoints/post_synth.dcp  
 report_timing_summary -file reports/post_synth_timing.rpt
 report_utilization -file reports/post_synth_util.rpt
 # TODO add more reports? They show example of custom script to report critical paths
 write_verilog -force {{ts.implement.top}}_post_synth.v
+report_clocks -verbose -file reports/post_synth_clocks.rpt
 #------------------------------------------------------------------------------
 
 #------------------------------------------------------------------------------
