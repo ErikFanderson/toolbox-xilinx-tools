@@ -4,38 +4,34 @@ namespace: simulate
 
 # Dictionary containing all properties/attributes required by the tool
 properties:
-  bin:
-    description: "Path to xsim binary."
-    default: "xsim" 
-    schema: "str()"
   include_dirs:
-    description: "List of directories to search for include files"
+    description: "List of directories to search for verilog include files"
     default: [] 
     schema: "list(dir())"
   defines:
-    description: "List of defines files"
+    description: "List of verilog defines files"
     default: [] 
     schema: "list(file())"
   packages:
-    description: "List of package files"
+    description: "List of verilog package files"
     default: [] 
     schema: "list(file())"
   rtl:
-    description: "List of rtl files"
+    description: "List of verilog rtl files"
     default: [] 
     schema: "list(file())"
   test:
-    description: "List of testbench files"
+    description: "List of verilog testbench files"
     default: [] 
     schema: "list(file())"
-  top_tcl_template:
-    description: "Jinja2 Tcl template used for input to xcelium."
-    default: null 
-    schema: "file(required=False)"
   testbench:
     description: "Testbench to be run by simulation tool."
     default: null
     schema: "str()"
+  verilog_version:
+    description: "Verilog version"
+    default: "sv" 
+    schema: "enum('sv', 'default')"
   options:
     description: "Command line options passed directly to executable. Strings are passed raw to binary."
     default: []
