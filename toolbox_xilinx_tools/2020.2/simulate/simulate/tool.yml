@@ -32,6 +32,10 @@ properties:
     description: "Verilog version"
     default: "sv" 
     schema: "enum('sv', 'default')"
+  include_uvm:
+    description: "Boolean flag for including UVM library"
+    default: false
+    schema: "bool()"
   options:
     description: "Command line options passed directly to executable. Strings are passed raw to binary."
     default: []

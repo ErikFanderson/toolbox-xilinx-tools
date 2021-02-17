@@ -33,6 +33,11 @@ class XsimTool(Tool):
     def parse_files(self):
         """Parsing design files with xvhdl and xvlog"""
         vlog_bin = BinaryDriver("xvlog")
+        #vlog_bin.add_option("-verbose", 2)
+        #if self.sim["include_uvm"]:
+        #    vlog_bin.add_option("-lib UVM")
+        if self.sim["verilog_version"] == "sv":
+            vlog_bin.add_option("-sv")
         for f in self.sim["defines"]:
             vlog_bin.add_option(f"{Path(f).resolve()}")
         for f in self.sim["packages"]:
@@ -53,6 +58,8 @@ class XsimTool(Tool):
         elab_bin = BinaryDriver("xelab")
         elab_bin.add_option(f"work.{self.sim['testbench']}")
         elab_bin.add_option("-snapshot", self.sim['testbench'])
+        #if self.sim["include_uvm"]:
+        #    elab_bin.add_option("-lib UVM")
         # Execute
         self.log(elab_bin.get_execute_string())
         exec_dir = self.get_db('internal.job_dir')
@@ -61,6 +68,8 @@ class XsimTool(Tool):
     def simulate_design(self):
         """Simulate design with xsim"""
         sim_bin = BinaryDriver("xsim")
+        #if self.sim["include_uvm"]:
+        #    sim_bin.add_option("-lib UVM")
         # Append options raw
         for o in self.sim["options"]:
             sim_bin.add_option(value=o)
