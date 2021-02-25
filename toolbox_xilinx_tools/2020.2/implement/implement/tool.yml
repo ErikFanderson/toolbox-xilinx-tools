@@ -28,6 +28,10 @@ properties:
     description: "List of xdc files to be included (read in the order given)"
     default: [] 
     schema: "list(file())"
+  post_synthesis_xdc:
+    description: "List of xdc files to be included AFTER SYNTHESIS (read in the order given)"
+    default: []
+    schema: "list(file())"
   ports:
     description: "List of port objects"
     default: [] 
