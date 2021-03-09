@@ -34,6 +34,7 @@ report_utilization -file reports/post_synth_util.rpt
 # TODO add more reports? They show example of custom script to report critical paths
 write_verilog -force {{ts.implement.top}}_post_synth.v
 report_clocks -verbose -file reports/post_synth_clocks.rpt
+check_timing -verbose -file reports/post_synth_check_timing.rpt
 #------------------------------------------------------------------------------
 
 #------------------------------------------------------------------------------
