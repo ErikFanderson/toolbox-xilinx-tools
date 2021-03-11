@@ -208,9 +208,9 @@ class XilinxImplementTool(JinjaTool):
         self.timing_xdc.add(self.io_delay_section())
         # Generate file
         if self.timing_xdc.generate():
-            self.log(f"Timing XDC generated: {self.timing_xdc.fpath}")
+            self.log(f"Timing XDC generated: {self.timing_xdc.fpath.relative_to(self.get_db('internal.work_dir'))}")
         else:
-            self.log(f"Timing XDC not generated: {self.timing_xdc.fpath}",
+            self.log(f"Timing XDC not generated",
                      LogLevel.WARNING)
 
     def run_vivado(self):
