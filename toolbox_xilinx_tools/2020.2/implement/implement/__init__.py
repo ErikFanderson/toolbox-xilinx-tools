@@ -142,6 +142,7 @@ class XilinxImplementTool(JinjaTool):
                     )
                 if con["clock_edge"] == "fall":
                     min_bin.add_option("-clock_fall")
+                    max_bin.add_option("-clock_fall")
                 min_bin.add_option("-verbose")
                 max_bin.add_option("-verbose")
                 min_bin.add_option("-clock", f"[get_clocks {con['clock']}]")
@@ -167,6 +168,7 @@ class XilinxImplementTool(JinjaTool):
                     )
                 if con["clock_edge"] == "fall":
                     min_bin.add_option("-clock_fall")
+                    max_bin.add_option("-clock_fall")
                 min_bin.add_option("-verbose")
                 max_bin.add_option("-verbose")
                 min_bin.add_option("-clock", f"[get_clocks {con['clock']}]")
