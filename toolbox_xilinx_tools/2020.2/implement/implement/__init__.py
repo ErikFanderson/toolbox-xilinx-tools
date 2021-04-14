@@ -9,6 +9,7 @@
 import os
 from typing import Callable, List
 import subprocess
+from shutil import copy
 
 # Imports - 3rd party packages
 from toolbox.tool import Tool, ToolError
@@ -37,7 +38,16 @@ class XilinxImplementTool(JinjaTool):
 
     def steps(self) -> List[Callable[[], None]]:
         """Returns a list of functions to run for each step"""
-        return [self.render_tcl, self.render_timing_xdc, self.run_vivado]
+        return [self.render_tcl, self.render_timing_xdc, self.copy_includes, self.run_vivado]
+
+    def copy_includes(self):
+        """Copies all files from include directories to the build directory"""
+        for d in self.viv["include_dirs"]:
+            p = Path(d).glob('**/*')
+            files = [x for x in p if x.is_file()]
+            for f in files:
+                copy(f, self.get_db("internal.job_dir"))
+                self.log(f"Copied {f} to job dir")
 
     def render_tcl(self):
         """Renders tcl file that vivado will run in batch mode"""

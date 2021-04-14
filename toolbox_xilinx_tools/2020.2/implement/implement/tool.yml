@@ -16,6 +16,10 @@ properties:
     description: "The FPGA part number that the software should target"
     default: null 
     schema: "str()"
+  include_dirs:
+    description: "List of verilog or vhdl include directories to be included (read in the order given)"
+    default: [] 
+    schema: "list(dir())"
   verilog:
     description: "List of verilog files to be included (read in the order given)"
     default: [] 
