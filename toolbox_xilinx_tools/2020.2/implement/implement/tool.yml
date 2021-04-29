@@ -83,8 +83,11 @@ schema_includes:
     package_pin: "str()"
     clock: "bool(required=False)"
     buffer_type: "str(required=False)"
-    #drive: "str()"
-    #slew: "str()"
+    slew: "enum('SLOW', 'FAST', required=False)"
+    drive: "enum(2, 4, 6, 8, 12, 16, 24, required=False)"
+    #PULLTYPE
+    #ODT
+    #FIXED? This should be input by default! => set_property IS_LOC_FIXED true [get_ports <list of ports>]
   cfg:
     mode: "str()"
     bank_voltage_select: "enum('VCCO', 'GND')"

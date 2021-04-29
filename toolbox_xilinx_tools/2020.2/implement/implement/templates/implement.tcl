@@ -83,6 +83,8 @@ set_property CONFIG_MODE {{ts.implement.config.mode}} [current_design]
 # Set port properties for port "{{port.name}}"
 set port [lindex [get_ports {{port.name}}] 0]
 set_property IOSTANDARD {{port.iostandard}} $port 
+{% if "slew" in port.keys() %}set_property SLEW {{port.slew}} $port{% endif %}
+{% if "drive" in port.keys() %}set_property DRIVE {{port.drive}} $port{% endif %}
 place_port -verbose "$port {{port.package_pin}}"
 {% if not loop.last %}
 
