@@ -64,7 +64,15 @@ properties:
     description: "Define units for all variables"
     default: {time: "ns", capacitance: "pF", current: "mA", voltage: "V", power: "mW", resistance: "ohm", altitude: "meters"}
     schema: "include('units')"
+  clock_groups:
+    description: "List of clock groups to define"
+    default: []
+    schema: "list(include('clock_group'))"
 schema_includes:
+  clock_group:
+    name: "str()"
+    type: "enum('physically_exclusive', 'asynchronous', 'logically_exclusive')"
+    groups: "list(list(str()))"
   input_delay_constraint:
     clock: "str()"
     clock_edge: "enum('rise', 'fall')"

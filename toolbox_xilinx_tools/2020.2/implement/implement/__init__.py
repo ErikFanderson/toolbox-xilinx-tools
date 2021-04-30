@@ -191,6 +191,18 @@ class XilinxImplementTool(JinjaTool):
                 section.add_line(max_bin.get_execute_string())
         return section
 
+    def clock_groups(self):
+        """Generates clock groups"""
+        section = Section("Clock groups", "#")
+        for cg in self.viv["clock_groups"]:
+            section.add_line(f"set_clock_groups -name {cg['name']} -{cg['type']} \\")
+            for i, group in enumerate(cg["groups"]):
+                if i == len(cg["groups"]) - 1:
+                    section.add_line(f'-group [get_clocks -include_generated_clocks "{" ".join(group)}"]')
+                else:
+                    section.add_line(f'-group [get_clocks -include_generated_clocks "{" ".join(group)}"] \\')
+        return section
+
     def render_timing_xdc(self):
         """Renders timing xdc file for constraining timing pre-synthesis"""
         ## TODO create similar methods for all xdc types: timing, io, misc, waver, and physical
@@ -218,6 +230,8 @@ class XilinxImplementTool(JinjaTool):
                 self.add_generated_clock(clocks_sec, clk)
         # Input/output delay
         self.timing_xdc.add(self.io_delay_section())
+        # Clock groups
+        self.timing_xdc.add(self.clock_groups())
         # Generate file
         if self.timing_xdc.generate():
             self.log(f"Timing XDC generated: {self.timing_xdc.fpath.relative_to(self.get_db('internal.work_dir'))}")
