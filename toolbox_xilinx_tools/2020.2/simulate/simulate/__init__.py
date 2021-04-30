@@ -58,6 +58,7 @@ class XsimTool(Tool):
         elab_bin = BinaryDriver("xelab")
         elab_bin.add_option(f"work.{self.sim['testbench']}")
         elab_bin.add_option("-snapshot", self.sim['testbench'])
+        elab_bin.add_option("-debug", "all")
         #if self.sim["include_uvm"]:
         #    elab_bin.add_option("-lib UVM")
         # Execute
@@ -74,7 +75,9 @@ class XsimTool(Tool):
         for o in self.sim["options"]:
             sim_bin.add_option(value=o)
         sim_bin.add_option(self.sim["testbench"])
-        sim_bin.add_option("-runall")
+        #sim_bin.add_option("-runall")
+        sim_bin.add_option("-wdb", "waves")
+        sim_bin.add_option("-gui")
         # Execute
         self.log(sim_bin.get_execute_string())
         exec_dir = self.get_db('internal.job_dir')
