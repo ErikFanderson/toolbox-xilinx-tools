@@ -12,6 +12,10 @@ properties:
     description: "Determines whether or not vivado is actually run (otherwise template rendered and that's it)"
     default: true
     schema: "bool()"
+  mode:
+    description: "Runs in either tcl (opens tcl prompt) or batch mode (exits)"
+    default: "batch"
+    schema: "enum('batch', 'tcl')"
   part:
     description: "The FPGA part number that the software should target"
     default: null 
@@ -85,9 +89,10 @@ schema_includes:
     port: "str()"
     min_delay: "num(min= 0.0)"
     max_delay: "num(min= 0.0)"
+  # TODO iostandard enum should be determined in with "get_io_standards"
   port:
     name: "str()"
-    iostandard: "enum('LVCMOS18', 'LVDS')"
+    iostandard: "enum('LVCMOS18', 'LVDS', 'LVDS_25', 'LVCMOS33', 'LVCMOS25', 'LVCMOS18')"
     package_pin: "str()"
     clock: "bool(required=False)"
     buffer_type: "str(required=False)"

@@ -246,7 +246,7 @@ class XilinxImplementTool(JinjaTool):
             # Add options
             render_file_local = Path(self.render_file).relative_to(
                 self.get_db('internal.job_dir'))
-            self.bin.add_option("-mode", "batch")
+            self.bin.add_option("-mode", self.viv['mode'])
             self.bin.add_option("-source", render_file_local)
             # Execute binary
             self.log(self.bin.get_execute_string())
