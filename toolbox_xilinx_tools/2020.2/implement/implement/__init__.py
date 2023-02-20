@@ -203,6 +203,21 @@ class XilinxImplementTool(JinjaTool):
                     section.add_line(f'-group [get_clocks -include_generated_clocks "{" ".join(group)}"] \\')
         return section
 
+    def false_paths(self):
+        """Generates clock groups"""
+        section = Section("False Paths", "#")
+        for path in self.viv["false_paths"]:
+            if path["from"]['type'] == "clock":
+                from_search = "get_clocks"
+            if path["to"]['type'] == "port":
+                to_search = "get_ports"
+            elif path["to"]['type'] == "pin":
+                to_search = "get_pins -hierarchical"
+            section.add_line(f"set_false_path -verbose \\")
+            section.add_line(f"\t-from [{from_search} {path['from']['name']}] \\")
+            section.add_line(f"\t-to [{to_search} {path['to']['name']}]")
+        return section
+
     def render_timing_xdc(self):
         """Renders timing xdc file for constraining timing pre-synthesis"""
         ## TODO create similar methods for all xdc types: timing, io, misc, waver, and physical
@@ -232,6 +247,7 @@ class XilinxImplementTool(JinjaTool):
         self.timing_xdc.add(self.io_delay_section())
         # Clock groups
         self.timing_xdc.add(self.clock_groups())
+        self.timing_xdc.add(self.false_paths())
         # Generate file
         if self.timing_xdc.generate():
             self.log(f"Timing XDC generated: {self.timing_xdc.fpath.relative_to(self.get_db('internal.work_dir'))}")

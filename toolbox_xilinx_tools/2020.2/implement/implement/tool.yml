@@ -1,6 +1,6 @@
 # Name must match the class name in __init__.py
 tool: XilinxImplementTool
-namespace: implement 
+namespace: implement
 
 # Dictionary containing all properties/attributes required by the tool
 properties:
@@ -18,23 +18,23 @@ properties:
     schema: "enum('batch', 'tcl')"
   part:
     description: "The FPGA part number that the software should target"
-    default: null 
+    default: null
     schema: "str()"
   include_dirs:
     description: "List of verilog or vhdl include directories to be included (read in the order given)"
-    default: [] 
+    default: []
     schema: "list(dir())"
   verilog:
     description: "List of verilog files to be included (read in the order given)"
-    default: [] 
+    default: []
     schema: "list(file())"
   vhdl:
     description: "List of vhdl files to be included (read in the order given)"
-    default: [] 
+    default: []
     schema: "list(file())"
   xdc:
     description: "List of xdc files to be included BEFORE SYNTHESIS (read in the order given)"
-    default: [] 
+    default: []
     schema: "list(file())"
   post_synthesis_xdc:
     description: "List of xdc files to be included AFTER SYNTHESIS (read in the order given)"
@@ -42,23 +42,23 @@ properties:
     schema: "list(file())"
   ports:
     description: "List of port objects"
-    default: [] 
+    default: []
     schema: "list(include('port'))"
   primary_clocks:
     description: "List of clocks for generating clock timing constraints"
-    default: [] 
+    default: []
     schema: "list(include('primary_clock'))"
   generated_clocks:
     description: "List of clocks for generating clock timing constraints"
-    default: [] 
+    default: []
     schema: "list(include('generated_clock'))"
   input_delay_constraints:
     description: "List of input delay constraints"
-    default: [] 
+    default: []
     schema: "list(include('input_delay_constraint'))"
   output_delay_constraints:
     description: "List of output delay constraints"
-    default: [] 
+    default: []
     schema: "list(include('output_delay_constraint'))"
   config:
     description: "Configuration settings for FPGA"
@@ -72,7 +72,18 @@ properties:
     description: "List of clock groups to define"
     default: []
     schema: "list(include('clock_group'))"
+  false_paths:
+    description: "List of false paths"
+    default: []
+    schema: "list(include('false_path'))"
 schema_includes:
+  false_path:
+    from:
+      name: 'str()'
+      type: "enum('clock')"
+    to:
+      name: 'str()'
+      type: "enum('port', 'pin')"
   clock_group:
     name: "str()"
     type: "enum('physically_exclusive', 'asynchronous', 'logically_exclusive')"

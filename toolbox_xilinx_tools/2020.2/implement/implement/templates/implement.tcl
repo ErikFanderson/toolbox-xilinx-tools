@@ -12,12 +12,12 @@ read_verilog -verbose {{f|realpath}}
 {% for f in ts.implement.vhdl %}
 read_vhdl -verbose {{f|realpath}}
 {% endfor %}
-{% for f in ts.implement.xdc %}
-read_xdc -verbose {{f|realpath}}
-{% endfor %}
 
 # Timing constraints
 read_xdc -verbose timing.xdc
+{% for f in ts.implement.xdc %}
+read_xdc -verbose {{f|realpath}}
+{% endfor %}
 
 # Create directories 
 file mkdir checkpoints
