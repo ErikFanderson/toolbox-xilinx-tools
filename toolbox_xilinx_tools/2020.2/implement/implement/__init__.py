@@ -35,10 +35,15 @@ class XilinxImplementTool(JinjaTool):
         self.timing_xdc = File(
             os.path.join(self.get_db("internal.job_dir"), "timing.xdc"), "#")
         self.time_multiplier = {"us": 1e3, "ns": 1, "ps": 1e-3}
+        self.open_tcl = os.path.join(self.get_db("internal.job_dir"), 'open.tcl')
+        self.open_sh = os.path.join(self.get_db("internal.job_dir"), 'open.sh')
 
     def steps(self) -> List[Callable[[], None]]:
         """Returns a list of functions to run for each step"""
-        return [self.render_tcl, self.render_timing_xdc, self.copy_includes, self.run_vivado]
+        return [self.render_tcl,
+                self.render_timing_xdc,
+                self.copy_includes,
+                self.run_vivado]
 
     def copy_includes(self):
         """Copies all files from include directories to the build directory"""
@@ -270,6 +275,16 @@ class XilinxImplementTool(JinjaTool):
             self.log(
                 f"Final implementation in => {Path(self.get_db('internal.job_dir')).relative_to(self.get_db('internal.work_dir'))}"
             )
+            # Open design script
+            with open(self.open_sh, 'w') as fp:
+                fp.write('#!/usr/bin/env bash\n')
+                fp.write(f'vivado -mode tcl -source {self.open_tcl}')
+            os.chmod(self.open_sh, 0o755)
+            checkp = os.path.join(self.get_db('internal.job_dir'), 'checkpoints/post_route.dcp')
+            with open(self.open_tcl, 'w') as fp:
+                fp.write(f'open_checkpoint {checkp}\n')
+                fp.write('start_gui')
+            self.log("Open design with script: build/implement/current/open.sh")
         else:
             self.log(
                 "Xilinx implement execute flag set to false. Design not implemented."
