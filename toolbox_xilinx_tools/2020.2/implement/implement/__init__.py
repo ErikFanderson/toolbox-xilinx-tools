@@ -225,18 +225,19 @@ class XilinxImplementTool(JinjaTool):
 
     def render_timing_xdc(self):
         """Renders timing xdc file for constraining timing pre-synthesis"""
-        ## TODO create similar methods for all xdc types: timing, io, misc, waver, and physical
-        # Units section
-        units_sec = Section(
-            "Set Units (redefine units in every XDC because paranoia)", "#")
-        units_sec.add_line(f"set_units -verbose \\")
-        units_sec.add_line(f"\t-current {self.viv['units']['current']} \\")
-        units_sec.add_line(f"\t-voltage {self.viv['units']['voltage']} \\")
-        units_sec.add_line(f"\t-power {self.viv['units']['power']} \\")
-        units_sec.add_line(
-            f"\t-resistance {self.viv['units']['resistance']} \\")
-        units_sec.add_line(f"\t-altitude {self.viv['units']['altitude']}")
-        self.timing_xdc.add(units_sec)
+        # TODO create similar methods for all xdc types: timing, io, misc, waver, and physical
+        # TODO delete me! Or put in different section? This causes a warning
+        ## Units section
+        #units_sec = Section(
+        #    "Set Units (redefine units in every XDC because paranoia)", "#")
+        #units_sec.add_line(f"set_units -verbose \\")
+        #units_sec.add_line(f"\t-current {self.viv['units']['current']} \\")
+        #units_sec.add_line(f"\t-voltage {self.viv['units']['voltage']} \\")
+        #units_sec.add_line(f"\t-power {self.viv['units']['power']} \\")
+        #units_sec.add_line(
+        #    f"\t-resistance {self.viv['units']['resistance']} \\")
+        #units_sec.add_line(f"\t-altitude {self.viv['units']['altitude']}")
+        #self.timing_xdc.add(units_sec)
         # Primary Clocks section
         clocks_sec = Section("Clock definitions", "#")
         self.timing_xdc.add(clocks_sec)

@@ -29,7 +29,7 @@ file mkdir reports
 #------------------------------------------------------------------------------
 synth_design -top {{ts.implement.top}} -flatten_hierarchy none -part {{ts.implement.part}}
 write_checkpoint -force -verbose checkpoints/post_synth.dcp  
-report_timing_summary -file reports/post_synth_timing.rpt
+report_timing_summary -file reports/post_synth_timing_summary.rpt
 report_utilization -file reports/post_synth_util.rpt
 # TODO add more reports? They show example of custom script to report critical paths
 write_verilog -force {{ts.implement.top}}_post_synth.v
@@ -100,7 +100,7 @@ place_port -verbose "$port {{port.package_pin}}"
 # Post-Synth Optimization 
 #------------------------------------------------------------------------------
 opt_design
-report_timing_summary -file reports/post_opt_timing.rpt
+report_timing_summary -file reports/post_opt_timing_summary.rpt
 report_utilization -file reports/post_opt_util.rpt
 # TODO add more reports? They show example of custom script to report critical paths
 # TODO add additional power_opt_design?
@@ -118,7 +118,7 @@ report_clock_utilization -file reports/post_place_clock_util.rpt
 #    phys_opt_design
 #}
 write_checkpoint -force -verbose checkpoints/post_place.dcp
-report_timing_summary -file reports/post_place_timing.rpt
+report_timing_summary -file reports/post_place_timing_summary.rpt
 report_utilization -file reports/post_place_util.rpt
 #------------------------------------------------------------------------------
 
@@ -128,7 +128,8 @@ report_utilization -file reports/post_place_util.rpt
 route_design
 write_checkpoint -force checkpoints/post_route.dcp
 report_route_status -file reports/post_route_status.rpt
-report_timing_summary -file reports/post_route_timing.rpt
+report_timing_summary -file reports/post_route_timing_summary.rpt
+report_timing -sort_by group -max_paths 50 -file reports/post_route_timing.rpt
 report_power -file reports/post_route_power.rpt
 report_drc -file reports/post_route_drc.rpt
 #------------------------------------------------------------------------------
