@@ -6,15 +6,19 @@ connect_hw_server -url {{ts.upload.hw_server.hostname}}:{{ts.upload.hw_server.po
 # Query hardware targets
 puts [get_hw_targets]
 {% else %}
-# Open specified hardware target 
+# Open specified hardware target (target represents JTAG chain of devices)
 current_hw_target [get_hw_targets {{ts.upload.target}}]
-set_property PARAM.FREQUENCY 15000000 [get_hw_targets {{ts.upload.target}}]
+set_property PARAM.FREQUENCY {{ts.upload.frequency}} [get_hw_targets {{ts.upload.target}}]
 open_hw_target
 
-# Associate bitsream with hardware
-set_property PROGRAM.FILE { {{ts.upload.bitstream|realpath}} } [lindex [get_hw_devices] 0]
+# Associate bitstream and mask file with hardware device (device is Xilinx device)
+create_hw_bitstream \
+    -hw_device [current_hw_device] \
+    -mask {{ts.upload.mask|realpath}} \
+    {{ts.upload.bitstream|realpath}}
 
-# Program hardware 
-program_hw_devices [lindex [get_hw_devices] 0]
-refresh_hw_device [lindex [get_hw_devices] 0]
+# Program hardware
+program_hw_devices [current_hw_device]
+refresh_hw_device [current_hw_device]
+verify_hw_devices -verbose [current_hw_device]
 {% endif %}

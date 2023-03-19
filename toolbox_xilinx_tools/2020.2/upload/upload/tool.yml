@@ -1,6 +1,6 @@
 # Name must match the class name in __init__.py
 tool: XilinxUploadTool
-namespace: upload 
+namespace: upload
 
 # Dictionary containing all properties/attributes required by the tool
 properties:
@@ -12,14 +12,22 @@ properties:
     description: "Path to the bitstream file that will be uploaded to the FPGA"
     default: null
     schema: "file()"
+  mask:
+    description: "Path to the mask file that will be used to verify the bitstream uploaded to the FPGA"
+    default: null
+    schema: "file()"
   hw_server:
     description: "Hostname and port number for the hardware server that manages hardware targets"
-    default: {hostname: "localhost", port: 3121} 
+    default: {hostname: "localhost", port: 3121}
     schema: "include('hw_server')"
   query_targets:
     description: "Will optionally query targets instead of uploading"
-    default: false 
+    default: false
     schema: "bool()"
+  frequency:
+    description: "JTAG frequency"
+    default: 15000000 
+    schema: "int()"
 schema_includes:
   hw_server:
     hostname: "str()"
