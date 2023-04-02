@@ -137,6 +137,7 @@ report_drc -file reports/post_route_drc.rpt
 #------------------------------------------------------------------------------
 # Final output generation
 #------------------------------------------------------------------------------
+write_xdc final_constraints.xdc
 write_verilog -force -mode timesim -sdf_anno true {{ts.implement.top}}_post_impl.v
 write_bitstream -mask_file -force -verbose {{ts.implement.top}}.bit
 #------------------------------------------------------------------------------
