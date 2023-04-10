@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# Read source files and constraints 
+# Read source files and constraints
 #------------------------------------------------------------------------------
 # Source files and any extra xdc files
 {% for f in ts.implement.verilog %}
@@ -19,7 +19,7 @@ read_xdc -verbose timing.xdc
 read_xdc -verbose {{f|realpath}}
 {% endfor %}
 
-# Create directories 
+# Create directories
 file mkdir checkpoints
 file mkdir reports
 #------------------------------------------------------------------------------
@@ -27,8 +27,8 @@ file mkdir reports
 #------------------------------------------------------------------------------
 # Synthesis (sets top and opens design)
 #------------------------------------------------------------------------------
-synth_design -top {{ts.implement.top}} -flatten_hierarchy none -part {{ts.implement.part}}
-write_checkpoint -force -verbose checkpoints/post_synth.dcp  
+synth_design -top {{ts.implement.top}} -flatten_hierarchy rebuilt -part {{ts.implement.part}}
+write_checkpoint -force -verbose checkpoints/post_synth.dcp
 report_timing_summary -file reports/post_synth_timing_summary.rpt
 report_utilization -file reports/post_synth_util.rpt
 # TODO add more reports? They show example of custom script to report critical paths
@@ -61,7 +61,7 @@ read_xdc -verbose {{f|realpath}}
 # TODO Device configuration setup (specifies how device configuration is stored and loaded)
 # TODO place this in xdc file? physical.xdc
 #------------------------------------------------------------------------------
-# Configuration bank voltage select (CFGBVS) 
+# Configuration bank voltage select (CFGBVS)
 # CFGBVS => VCCO when CONFIG_VOLTAGE = 3.3V/2.5V
 # CFGBVS => GND when CONFIG_VOLTAGE = 1.8V/1.5V
 set_property CFGBVS {{ts.implement.config.bank_voltage_select}} [current_design]
@@ -77,12 +77,12 @@ set_property CONFIG_MODE {{ts.implement.config.mode}} [current_design]
 #------------------------------------------------------------------------------
 
 #------------------------------------------------------------------------------
-# IO/Pin Planning 
+# IO/Pin Planning
 #------------------------------------------------------------------------------
 {% for port in ts.implement.ports %}
 # Set port properties for port "{{port.name}}"
 set port [lindex [get_ports {{port.name}}] 0]
-set_property IOSTANDARD {{port.iostandard}} $port 
+set_property IOSTANDARD {{port.iostandard}} $port
 {% if "slew" in port.keys() %}
 set_property SLEW {{port.slew}} $port
 {% endif %}
@@ -97,7 +97,7 @@ place_port -verbose "$port {{port.package_pin}}"
 #------------------------------------------------------------------------------
 
 #------------------------------------------------------------------------------
-# Post-Synth Optimization 
+# Post-Synth Optimization
 #------------------------------------------------------------------------------
 opt_design
 report_timing_summary -file reports/post_opt_timing_summary.rpt
@@ -113,7 +113,7 @@ place_design
 report_clock_utilization -file reports/post_place_clock_util.rpt
 # TODO optionally run optimization if there are timing violations after placement
 # TODO get phys_opt_Design integrated
-#if {[get_property SLACK [get_timing_paths -max_paths 1 -nworst -setup]] < 0} {
+#if {[get_property SLACK [get_timing_paths -max_paths 1 -nworst 1 -setup]] < 0} {
 #    puts "Found setup timing violations => running physical optimization"
 #    phys_opt_design
 #}
@@ -127,6 +127,7 @@ report_utilization -file reports/post_place_util.rpt
 #------------------------------------------------------------------------------
 route_design
 write_checkpoint -force checkpoints/post_route.dcp
+report_utilization -file reports/post_route_util.rpt
 report_route_status -file reports/post_route_status.rpt
 report_timing_summary -file reports/post_route_timing_summary.rpt
 report_timing -sort_by group -max_paths 50 -file reports/post_route_timing.rpt
