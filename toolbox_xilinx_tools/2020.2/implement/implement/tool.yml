@@ -76,6 +76,10 @@ properties:
     description: "List of false paths"
     default: []
     schema: "list(include('false_path'))"
+  flatten_hierarchy:
+    description: "Optionally flatten hierarchy"
+    default: 'none'
+    schema: "enum('rebuilt', 'none', 'full')"
 schema_includes:
   false_path:
     from:

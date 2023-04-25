@@ -27,7 +27,7 @@ file mkdir reports
 #------------------------------------------------------------------------------
 # Synthesis (sets top and opens design)
 #------------------------------------------------------------------------------
-synth_design -top {{ts.implement.top}} -flatten_hierarchy rebuilt -part {{ts.implement.part}}
+synth_design -top {{ts.implement.top}} -flatten_hierarchy {{ts.implement.flatten_hierarchy}} -part {{ts.implement.part}}
 write_checkpoint -force -verbose checkpoints/post_synth.dcp
 report_timing_summary -file reports/post_synth_timing_summary.rpt
 report_utilization -file reports/post_synth_util.rpt
@@ -139,6 +139,8 @@ report_drc -file reports/post_route_drc.rpt
 # Final output generation
 #------------------------------------------------------------------------------
 write_xdc final_constraints.xdc
-write_verilog -force -mode timesim -sdf_anno true {{ts.implement.top}}_post_impl.v
+write_verilog -force -mode timesim {{ts.implement.top}}_post_impl.v
+write_sdf -force -mode timesim -process_corner slow {{ts.implement.top}}_post_impl_slow.sdf
+write_sdf -force -mode timesim -process_corner fast {{ts.implement.top}}_post_impl_fast.sdf
 write_bitstream -mask_file -force -verbose {{ts.implement.top}}.bit
 #------------------------------------------------------------------------------
