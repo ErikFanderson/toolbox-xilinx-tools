@@ -107,7 +107,7 @@ schema_includes:
   # TODO iostandard enum should be determined in with "get_io_standards"
   port:
     name: "str()"
-    iostandard: "enum('LVCMOS18', 'LVDS', 'LVDS_25', 'LVCMOS33', 'LVCMOS25', 'LVCMOS18')"
+    iostandard: "enum('LVCMOS12', 'LVDS', 'LVDS_25', 'LVCMOS33', 'LVCMOS25', 'LVCMOS18')"
     package_pin: "str()"
     clock: "bool(required=False)"
     buffer_type: "str(required=False)"
